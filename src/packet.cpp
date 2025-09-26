@@ -24,32 +24,40 @@ Packet Packet::create(int id, PacketKind kind, std::vector<uint8_t> body) {
 
 std::optional<PacketKind> kparse_from(const std::array<uint8_t, 4> &bytes) {
   uint32_t value = parse_32(bytes);
-    
+  std::optional<PacketKind> parsed = std::nullopt;
+  
   switch (value) {
-    case 0: return PacketKind::Ping;
-    case 1: return PacketKind::Setup;
-    case 2: return PacketKind::GameAction;
-    case 3: return PacketKind::ActionDone;
-    case 4: return PacketKind::ActionFail;
-    case 5: return PacketKind::Error;
-    case 6: return PacketKind::MatchStatus;
-    case 7: return PacketKind::Pong;
-    default: return std::nullopt;
+    case 0: parsed = PacketKind::Ping;
+    case 1: parsed = PacketKind::Setup;
+    case 2: parsed = PacketKind::GameAction;
+    case 3: parsed = PacketKind::ActionDone;
+    case 4: parsed = PacketKind::ActionFail;
+    case 5: parsed = PacketKind::Error;
+    case 6: parsed = PacketKind::MatchStatus;
+    case 7: parsed = PacketKind::Pong;
+    default: parsed = std::nullopt;
   }
+
+  return parsed;
 }
 
-std::array<uint8_t, 4> kparse_into(PacketKind &kind) {
-  switch (kind) {
-    case PacketKind::Ping: return { 0x00, 0x00, 0x00, 0x00 };
-    case PacketKind::Setup: return { 0x01, 0x00, 0x00, 0x00 };
-    case PacketKind::GameAction: return { 0x02, 0x00, 0x00, 0x00 };
-    case PacketKind::ActionDone: return { 0x03, 0x00, 0x00, 0x00 };
-    case PacketKind::ActionFail: return { 0x04, 0x00, 0x00, 0x00 };
-    case PacketKind::Error: return { 0x05, 0x00, 0x00, 0x00 };
-    case PacketKind::MatchStatus: return { 0x06, 0x00, 0x00, 0x00 };
-    case PacketKind::Pong: return { 0x07, 0x00, 0x00, 0x00 };
-  }
+std::array<uint8_t, 4> kparse_into(const PacketKind kind) {
+    uint8_t value = 0xFF; // invalid default
+
+    switch (kind) {
+        case PacketKind::Ping:        value = 0x00; break;
+        case PacketKind::Setup:       value = 0x01; break;
+        case PacketKind::GameAction:  value = 0x02; break;
+        case PacketKind::ActionDone:  value = 0x03; break;
+        case PacketKind::ActionFail:  value = 0x04; break;
+        case PacketKind::Error:       value = 0x05; break;
+        case PacketKind::MatchStatus: value = 0x06; break;
+        case PacketKind::Pong:        value = 0x07; break;
+    }
+
+    return { value, 0x00, 0x00, 0x00 };
 }
+
  
 uint32_t parse_32(const std::array<uint8_t, 4> &bytes) {
   return (uint32_t)bytes[0]|

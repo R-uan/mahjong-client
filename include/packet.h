@@ -40,7 +40,7 @@ enum Setup {
 std::array<uint8_t, 4> kparse_into(PacketKind &kind);
 std::optional<PacketKind> kparse_from(const std::array<uint8_t, 4> &bytes);
 
-std::array<uint8_t, 4> sparse_into(enum::Setup &setup);
-enum::Setup sparse_from(std::vector<uint8_t> &bytes);
+// std::array<uint8_t, 4> sparse_into(enum::Setup &setup);
+// enum::Setup sparse_from(std::vector<uint8_t> &bytes);
 
 #endif
