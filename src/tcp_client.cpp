@@ -1,5 +1,4 @@
 #include "tcp_client.h"
-#include "protocol.h"
 #include "packet.h"
 #include <atomic>
 #include <cstdint>

@@ -1,6 +1,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 
+#include <array>
 #include <cstdint>
 #include <optional>
 #include <vector>
@@ -22,6 +23,9 @@ struct Packet {
   PacketKind kind;
   std::vector<uint8_t> body;
   
+  Packet(int id, PacketKind kind, int size, std::vector<uint8_t> body):
+    id(id), kind(kind), size(size), body(body) {}
+    
   static std::optional<Packet> parse(std::vector<uint8_t> bytes);
   static Packet create(int id, PacketKind kind, std::vector<uint8_t> body);
 };
@@ -33,10 +37,10 @@ enum Setup {
   Ready = 4
 };
 
-std::vector<uint8_t> kparse_into(PacketKind &kind);
-PacketKind kparse_from(std::vector<uint8_t> &bytes);
+std::array<uint8_t, 4> kparse_into(PacketKind &kind);
+std::optional<PacketKind> kparse_from(const std::array<uint8_t, 4> &bytes);
 
-std::vector<uint8_t> sparse_into(enum::Setup &setup);
+std::array<uint8_t, 4> sparse_into(enum::Setup &setup);
 enum::Setup sparse_from(std::vector<uint8_t> &bytes);
 
 #endif
